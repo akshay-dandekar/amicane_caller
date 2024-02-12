@@ -1,0 +1,11 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.amicane.amicane_caller">
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+<!--    <receiver android:name=".services.OutgoingCallReceiver">-->
+<!--        <intent-filter>-->
+<!--            <action android:name="android.intent.action.NEW_OUTGOING_CALL" />-->
+<!--        </intent-filter>-->
+<!--    </receiver>-->
+
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+</manifest>
