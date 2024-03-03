@@ -26,4 +26,8 @@ abstract class AmicaneCallerPlatform extends PlatformInterface {
   Future<String?> placeCall(String phone) {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  Future<String?> sendSMS(String phone, String message) {
+    throw UnimplementedError('platformVersion() has not been implemented.');
+  }
 }

@@ -11,7 +11,15 @@ class MethodChannelAmicaneCaller extends AmicaneCallerPlatform {
 
   @override
   Future<String?> placeCall(String phone) async {
-    final version = await methodChannel.invokeMethod<String>('placeCall', {"phone": phone});
+    final version =
+        await methodChannel.invokeMethod<String>('placeCall', {"phone": phone});
+    return version;
+  }
+
+  @override
+  Future<String?> sendSMS(String phone, String message) async {
+    final version = await methodChannel.invokeMethod<String>(
+        'placeCall', {"phone": phone, "message": message});
     return version;
   }
 }

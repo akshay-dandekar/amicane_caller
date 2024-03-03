@@ -35,6 +35,7 @@ class AmicaneCallerPlugin: FlutterPlugin, MethodCallHandler {
   private lateinit var context : Context
   private lateinit var telecomManager:TelecomManager
   private lateinit var telephonyManager:TelephonyManager
+  private lateinit var smsMnager:SmsManager
 
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -44,10 +45,17 @@ class AmicaneCallerPlugin: FlutterPlugin, MethodCallHandler {
     context = flutterPluginBinding.applicationContext
     telecomManager = context.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
     telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+    smsMnager = SmsManager.getDefault();
   }
 
   override fun onMethodCall(call: MethodCall, result: Result) {
-    if (call.method == "placeCall") {
+    if(call.method == "sendSms") {
+      var phoneNo:String? = call.argument("phone")
+      var message:String? = call.argument("message")
+
+      smsManager.sendTextMessage(phoneNo, null, message, null, null);
+
+    } else if (call.method == "placeCall") {
 //      val callIntent = Intent(Intent.ACTION_CALL)
 //      callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //      callIntent.setData(Uri.parse("tel:7350016095"))
@@ -61,7 +69,9 @@ class AmicaneCallerPlugin: FlutterPlugin, MethodCallHandler {
         var extras: Bundle? = Bundle()
         extras?.putBoolean(TelecomManager.EXTRA_START_CALL_WITH_SPEAKERPHONE, true)
         telecomManager.placeCall(uri, extras)
-        
+
+
+
         var teleCb: TelephonyCallback =  object : TelephonyCallback(), TelephonyCallback.CallStateListener {
           open override fun onCallStateChanged(state: Int) {
             if (state == TelephonyManager.CALL_STATE_RINGING) {
