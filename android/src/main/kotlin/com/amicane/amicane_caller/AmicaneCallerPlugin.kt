@@ -35,7 +35,7 @@ class AmicaneCallerPlugin: FlutterPlugin, MethodCallHandler {
   private lateinit var context : Context
   private lateinit var telecomManager:TelecomManager
   private lateinit var telephonyManager:TelephonyManager
-  private lateinit var smsMnager:SmsManager
+  private lateinit var smsManager:SmsManager
 
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -45,7 +45,7 @@ class AmicaneCallerPlugin: FlutterPlugin, MethodCallHandler {
     context = flutterPluginBinding.applicationContext
     telecomManager = context.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
     telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-    smsMnager = SmsManager.getDefault();
+    smsManager = SmsManager.getDefault();
   }
 
   override fun onMethodCall(call: MethodCall, result: Result) {
