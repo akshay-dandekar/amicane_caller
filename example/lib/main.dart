@@ -15,9 +15,19 @@ final _amicaneCallerPlugin = AmicaneCaller();
 @pragma(
     'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
 Future<void> onStart(ServiceInstance service) async {
-  Timer.periodic(const Duration(seconds: 30), (timer) async {
-    var random = await _amicaneCallerPlugin.getPlatformVersion("123456");
-    print("---- FG:::::: platform version is $random");
+  Future.delayed(const Duration(seconds: 30), () async {
+    try {
+      var random = await _amicaneCallerPlugin.placeCall("123456");
+      print("---- BG:::::: platform version is $random");
+    } catch(e) {
+      print("Unable to place call from BG");
+    }
+    try {
+      await _amicaneCallerPlugin.sendSMS("123456", "HI");
+    } catch(e) {
+      print("Unable to send an SMS from BG: $e");
+    }
+
   });
 }
 
@@ -90,15 +100,15 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    String platformVersion;
+    String platformVersion = "Test";
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
-    try {
-      platformVersion = await _amicaneCallerPlugin.placeCall("") ??
-          'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
+    // try {
+    //   platformVersion = await _amicaneCallerPlugin.placeCall("") ??
+    //       'Unknown platform version';
+    // } on PlatformException {
+    //   platformVersion = 'Failed to get platform version.';
+    // }
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling

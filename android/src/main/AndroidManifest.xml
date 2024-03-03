@@ -8,4 +8,5 @@
 <!--    </receiver>-->
 
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.SEND_SMS"/>
 </manifest>

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import android.telecom.TelecomManager;
 import android.telephony.TelephonyCallback
+import android.telephony.SmsManager
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -72,30 +73,41 @@ class AmicaneCallerPlugin: FlutterPlugin, MethodCallHandler {
 
 
 
-        var teleCb: TelephonyCallback =  object : TelephonyCallback(), TelephonyCallback.CallStateListener {
-          open override fun onCallStateChanged(state: Int) {
-            if (state == TelephonyManager.CALL_STATE_RINGING) {
-              print("TELE STATE -------   Ringing   -----------")
-              Toast.makeText(context, "Ringing",
-                Toast.LENGTH_LONG).show()
-            }
-            if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
-              print("TELE STATE --------- Call in progress -----------")
-              Toast.makeText(context, "Busy::Currently in another Call",
-                Toast.LENGTH_LONG).show()
-            }
-            if (state == TelephonyManager.CALL_STATE_IDLE) {
-              print("TELE STATE ----------- Call idle --------------");
-              Toast.makeText(context, "Not Available:: Neither Ringing nor in a Call",
-                Toast.LENGTH_LONG).show()
-            }
+        try {
+          var teleCb: TelephonyCallback =
+            object : TelephonyCallback(), TelephonyCallback.CallStateListener {
+              open override fun onCallStateChanged(state: Int) {
+                if (state == TelephonyManager.CALL_STATE_RINGING) {
+                  print("TELE STATE -------   Ringing   -----------")
+                  Toast.makeText(
+                    context, "Ringing",
+                    Toast.LENGTH_LONG
+                  ).show()
+                }
+                if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
+                  print("TELE STATE --------- Call in progress -----------")
+                  Toast.makeText(
+                    context, "Busy::Currently in another Call",
+                    Toast.LENGTH_LONG
+                  ).show()
+                }
+                if (state == TelephonyManager.CALL_STATE_IDLE) {
+                  print("TELE STATE ----------- Call idle --------------");
+                  Toast.makeText(
+                    context, "Not Available:: Neither Ringing nor in a Call",
+                    Toast.LENGTH_LONG
+                  ).show()
+                }
 
 //            Toast.makeText(context, "Call State change -------   $state   -----------",
 //              Toast.LENGTH_LONG).show()
-          }
+              }
+
+            }
+          telephonyManager.registerTelephonyCallback(context.getMainExecutor(), teleCb)
+        } catch (e: Exception) {
 
         }
-        telephonyManager.registerTelephonyCallback(context.getMainExecutor(), teleCb)
 
       }
       result.success("Android ${android.os.Build.VERSION.RELEASE}")
