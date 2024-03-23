@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -15,17 +16,25 @@ final _amicaneCallerPlugin = AmicaneCaller();
 @pragma(
     'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
 Future<void> onStart(ServiceInstance service) async {
-  Future.delayed(const Duration(seconds: 30), () async {
+  Future.delayed(const Duration(seconds: 10), () async {
+    // try {
+    //   var random = await _amicaneCallerPlugin.placeCall("123456");
+    //   print("---- BG:::::: platform version is $random");
+    // } catch(e) {
+    //   print("Unable to place call from BG");
+    // }
+    // try {
+    //   await _amicaneCallerPlugin.sendSMS("123456", "HI");
+    // } catch(e) {
+    //   print("Unable to send an SMS from BG: $e");
+    // }
+
     try {
-      var random = await _amicaneCallerPlugin.placeCall("123456");
-      print("---- BG:::::: platform version is $random");
-    } catch(e) {
-      print("Unable to place call from BG");
-    }
-    try {
-      await _amicaneCallerPlugin.sendSMS("123456", "HI");
-    } catch(e) {
-      print("Unable to send an SMS from BG: $e");
+      print("starting activity");
+      print(await _amicaneCallerPlugin.bringToForeground("com.android.settings", "com.android.settings.fuelgauge.PowerUsageSummary"));
+
+    }catch (e) {
+      print("unable to start activity $e");
     }
 
   });
@@ -128,7 +137,7 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Text('Running on: \n'),
         ),
       ),
     );

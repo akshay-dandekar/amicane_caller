@@ -1,30 +1,23 @@
 package com.amicane.amicane_caller
 
-import android.content.Context;
-import android.app.Activity
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.telephony.PhoneStateListener
-import android.telephony.TelephonyManager
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.widget.Toast;
-
-import android.telecom.TelecomManager;
-import android.telephony.TelephonyCallback
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
+import android.telecom.TelecomManager
 import android.telephony.SmsManager
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+//import android.telephony.TelephonyCallback
 
+
+import android.telephony.TelephonyManager
+import android.widget.Toast
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import io.flutter.plugin.common.PluginRegistry
 
 /** AmicaneCallerPlugin */
 class AmicaneCallerPlugin: FlutterPlugin, MethodCallHandler {
@@ -50,7 +43,20 @@ class AmicaneCallerPlugin: FlutterPlugin, MethodCallHandler {
   }
 
   override fun onMethodCall(call: MethodCall, result: Result) {
-    if(call.method == "sendSms") {
+    if(call.method == "bringToForeground") {
+      var activityPkg:String = call.argument("activityPkg")?:"";
+      var activityName:String = call.argument("activityName")?:"";
+
+
+      val intent =
+        context.getPackageManager().getLaunchIntentForPackage(context.getPackageName())
+      intent?.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+      intent?.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+      intent?.setAction(Intent.ACTION_MAIN);
+      intent?.addCategory(Intent.CATEGORY_LAUNCHER);
+      context.startActivity(intent)
+      result.success("Android::${context.getPackageName()} ${intent}")
+    } else if(call.method == "sendSms") {
       var phoneNo:String? = call.argument("phone")
       var message:String? = call.argument("message")
 
@@ -74,37 +80,37 @@ class AmicaneCallerPlugin: FlutterPlugin, MethodCallHandler {
 
 
         try {
-          var teleCb: TelephonyCallback =
-            object : TelephonyCallback(), TelephonyCallback.CallStateListener {
-              open override fun onCallStateChanged(state: Int) {
-                if (state == TelephonyManager.CALL_STATE_RINGING) {
-                  print("TELE STATE -------   Ringing   -----------")
-                  Toast.makeText(
-                    context, "Ringing",
-                    Toast.LENGTH_LONG
-                  ).show()
-                }
-                if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
-                  print("TELE STATE --------- Call in progress -----------")
-                  Toast.makeText(
-                    context, "Busy::Currently in another Call",
-                    Toast.LENGTH_LONG
-                  ).show()
-                }
-                if (state == TelephonyManager.CALL_STATE_IDLE) {
-                  print("TELE STATE ----------- Call idle --------------");
-                  Toast.makeText(
-                    context, "Not Available:: Neither Ringing nor in a Call",
-                    Toast.LENGTH_LONG
-                  ).show()
-                }
-
-//            Toast.makeText(context, "Call State change -------   $state   -----------",
-//              Toast.LENGTH_LONG).show()
-              }
-
-            }
-          telephonyManager.registerTelephonyCallback(context.getMainExecutor(), teleCb)
+//          var teleCb: TelephonyCallback =
+//            object : TelephonyCallback(), TelephonyCallback.CallStateListener {
+//              open override fun onCallStateChanged(state: Int) {
+//                if (state == TelephonyManager.CALL_STATE_RINGING) {
+//                  print("TELE STATE -------   Ringing   -----------")
+//                  Toast.makeText(
+//                    context, "Ringing",
+//                    Toast.LENGTH_LONG
+//                  ).show()
+//                }
+//                if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
+//                  print("TELE STATE --------- Call in progress -----------")
+//                  Toast.makeText(
+//                    context, "Busy::Currently in another Call",
+//                    Toast.LENGTH_LONG
+//                  ).show()
+//                }
+//                if (state == TelephonyManager.CALL_STATE_IDLE) {
+//                  print("TELE STATE ----------- Call idle --------------");
+//                  Toast.makeText(
+//                    context, "Not Available:: Neither Ringing nor in a Call",
+//                    Toast.LENGTH_LONG
+//                  ).show()
+//                }
+//
+////            Toast.makeText(context, "Call State change -------   $state   -----------",
+////              Toast.LENGTH_LONG).show()
+//              }
+//
+//            }
+//          telephonyManager.registerTelephonyCallback(context.getMainExecutor(), teleCb)
         } catch (e: Exception) {
 
         }

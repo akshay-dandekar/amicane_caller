@@ -9,4 +9,8 @@ class AmicaneCaller {
   Future<String?> sendSMS(String phone, String message) {
     return AmicaneCallerPlatform.instance.sendSMS(phone, message);
   }
+
+  Future<String?> bringToForeground(String activityPkg, String activityName) {
+    return AmicaneCallerPlatform.instance.bringToForeground(activityPkg, activityName);
+  }
 }

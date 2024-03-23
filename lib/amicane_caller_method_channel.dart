@@ -22,4 +22,11 @@ class MethodChannelAmicaneCaller extends AmicaneCallerPlatform {
         'sendSms', {"phone": phone, "message": message});
     return version;
   }
+
+  @override
+  Future<String?> bringToForeground(String activityPkg, String activityName) async {
+    final version = await methodChannel.invokeMethod<String>(
+        'bringToForeground', {"activityPkg": activityPkg, "activityName": activityName});
+    return version;
+  }
 }
